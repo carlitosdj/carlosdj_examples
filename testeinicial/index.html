@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR" class="carregando">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0E0E10" />
+    <title>Teste inicial · examples · carlosdj</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Tela de carregamento: some quando os 121 quadros chegam -->
+    <div class="carga" id="carga" role="status" aria-live="polite">
+      <p class="carga-numero"><span id="carga-numero">0</span>%</p>
+      <p class="carga-texto">Carregando os quadros</p>
+      <div class="carga-barra"><i id="carga-barra"></i></div>
+    </div>
+
+    <main>
+      <!-- O PALCO: fica preso na tela enquanto a rolagem "toca" o vídeo -->
+      <section class="palco" id="palco" aria-label="Uma casa do dia à noite">
+        <canvas id="tela" aria-hidden="true"></canvas>
+        <div class="veu" aria-hidden="true"></div>
+
+        <!-- Cada frase diz em que trecho da rolagem aparece: de 0 (início) a 1 (fim) -->
+        <div class="frase frase-abre" data-de="0" data-ate="0.14">
+          <p class="sobre">Teste inicial</p>
+          <h1>Role para <span class="grifo">anoitecer</span>.</h1>
+          <p class="apoio fino">Um vídeo de 5 segundos. Quem dá o play é a sua rolagem.</p>
+        </div>
+
+        <div class="frase" data-de="0.2" data-ate="0.4">
+          <p class="sobre">Dia</p>
+          <h2>Luz natural <span class="fino">em cada ambiente.</span></h2>
+        </div>
+
+        <div class="frase" data-de="0.48" data-ate="0.7">
+          <p class="sobre">Entardecer</p>
+          <h2>O céu muda. <span class="fino">A casa acende.</span></h2>
+        </div>
+
+        <div class="frase" data-de="0.78" data-ate="1">
+          <p class="sobre">Noite</p>
+          <h2>A mesma casa, <span class="fino">outra presença.</span></h2>
+        </div>
+
+        <p class="dica" id="dica" aria-hidden="true">Role a página</p>
+
+        <!-- Bastidores: mostra o que o GSAP está fazendo (liga e desliga pelo menu) -->
+        <div class="bastidores" id="bastidores" aria-hidden="true">
+          <span id="b-quadro">quadro 001/121</span>
+          <span id="b-parte">0%</span>
+          <span id="b-versao"></span>
+        </div>
+        <div class="andamento" aria-hidden="true"><i id="andamento"></i></div>
+      </section>
+
+      <!-- Depois do palco a página volta a rolar normalmente -->
+      <section class="como" id="como">
+        <div class="miolo">
+          <p class="sobre">Como funciona</p>
+          <h2>Quatro peças, <span class="fino">nenhuma mágica.</span></h2>
+
+          <div class="passos">
+            <article class="cartao">
+              <span class="passo-n">1</span>
+              <h3>O vídeo vira imagens</h3>
+              <p>Antes de a página existir, o vídeo é fatiado: um arquivo por quadro. Aqui são <strong id="n-quadros">121</strong> imagens WebP.</p>
+            </article>
+            <article class="cartao">
+              <span class="passo-n">2</span>
+              <h3>A tela fica presa</h3>
+              <p>O ScrollTrigger segura o palco no lugar (<code>pin</code>) enquanto você rola o equivalente a 4 telas.</p>
+            </article>
+            <article class="cartao">
+              <span class="passo-n">3</span>
+              <h3>Rolagem vira número</h3>
+              <p>Do início ao fim desse trecho, o GSAP leva um número de 0 a 120. Cada valor é um quadro desenhado no canvas.</p>
+            </article>
+            <article class="cartao">
+              <span class="passo-n">4</span>
+              <h3>Os textos entram na mesma linha do tempo</h3>
+              <p>Cada frase tem um trecho marcado no HTML (<code>data-de</code> e <code>data-ate</code>). Mudar o momento é trocar um número.</p>
+            </article>
+          </div>
+
+          <div class="numeros">
+            <div><strong id="n-total">121</strong><span>quadros</span></div>
+            <div><strong id="n-versao">—</strong><span>versão carregada</span></div>
+            <div><strong id="n-peso">—</strong><span>baixados nesta tela</span></div>
+            <div><strong id="n-tempo">—</strong><span>para carregar</span></div>
+          </div>
+
+          <a class="botao" id="voltar" href="#palco">Ver de novo</a>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,223 @@
+/* Base de todos os exemplos: mesmas cores e fonte do site (paleta "Céu", só escuro). */
+:root {
+  --fundo: #0e0e10;
+  --cartao: #17171a;
+  --linha: rgba(255, 255, 255, 0.1);
+  --texto: #f3f3f5;
+  --apagado: #a3a3ad;
+  --ceu: #a9cdec;
+  --sobre-ceu: #0e0e10;
+  --fino: 300;
+  --raio: 22px;
+  --topo: 64px;
+  --fonte: 'Manrope', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+.fino {
+  font-weight: var(--fino);
+}
+
+.grifo {
+  color: var(--ceu);
+}
+
+.miolo {
+  width: min(1120px, 100% - 40px);
+  margin-inline: auto;
+}
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ceu);
+  color: var(--sobre-ceu);
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cartao {
+  background: var(--cartao);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 24px;
+}
+
+/* ---------- Menu superior (comum/menu.ts) ---------- */
+.topo {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  height: var(--topo);
+  display: flex;
+  align-items: center;
+  transition: background 0.3s, border-color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+.topo.rolou {
+  background: rgba(14, 14, 16, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--linha);
+}
+
+.topo-miolo {
+  width: min(1120px, 100% - 40px);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.topo-marca {
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+}
+
+.topo-marca span {
+  font-weight: var(--fino);
+  color: var(--ceu);
+}
+
+.topo-itens {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(14, 14, 16, 0.55);
+  border: 1px solid var(--linha);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.topo-itens a,
+.topo-itens button {
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--texto);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.topo-itens a:hover,
+.topo-itens button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.topo-itens .ativo {
+  background: var(--ceu);
+  color: var(--sobre-ceu);
+}
+
+.topo-itens a:focus-visible,
+.topo-itens button:focus-visible,
+.topo-abrir:focus-visible,
+.botao:focus-visible {
+  outline: 2px solid var(--ceu);
+  outline-offset: 2px;
+}
+
+.topo-abrir {
+  display: none;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--linha);
+  background: rgba(14, 14, 16, 0.55);
+  color: var(--texto);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* No celular os itens viram uma lista que abre pelo botão "Menu" */
+@media (max-width: 760px) {
+  .topo-abrir {
+    display: block;
+  }
+
+  .topo-itens {
+    position: absolute;
+    top: calc(var(--topo) - 4px);
+    right: 20px;
+    left: 20px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 8px;
+    border-radius: var(--raio);
+    background: rgba(14, 14, 16, 0.94);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  }
+
+  .topo.aberto .topo-itens {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+
+  .topo-itens a,
+  .topo-itens button {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

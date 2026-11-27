@@ -1,0 +1,18 @@
+# examples.carlosdj.com.br: produção. O CI roda isto em /www/wwwroot/nodeapps/examples_carlosdj.
+# Site estático (nginx) em 127.0.0.1:4904; o proxy do servidor aponta o subdomínio para essa porta.
+name: examples
+
+services:
+  examples:
+    build:
+      context: .
+    image: carlosdj-examples:latest
+    container_name: carlosdj-examples
+    restart: always
+    ports:
+      - "127.0.0.1:4904:80"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

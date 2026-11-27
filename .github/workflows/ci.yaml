@@ -1,0 +1,85 @@
+name: Deploy - examples
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-examples
+  cancel-in-progress: false
+
+jobs:
+  # Confere os tipos e o build ANTES de mandar qualquer coisa para o servidor:
+  # com erro aqui, o deploy nem começa e a produção fica como estava.
+  conferir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Tipos e build
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+  deploy:
+    needs: conferir
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout codigo
+        uses: actions/checkout@v4
+
+      - name: Deploy codigo via rsync
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          rsync -avz --delete \
+            --exclude 'node_modules/' \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude 'dist/' \
+            --exclude 'videos/' \
+            --exclude '*.log' \
+            -e "ssh -i ~/.ssh/deploy_key -p $REMOTE_PORT -o StrictHostKeyChecking=no -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa" \
+            ./ $REMOTE_USER@$REMOTE_HOST:/www/wwwroot/nodeapps/examples_carlosdj/
+
+      - name: Build Docker e restart
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          script: |
+            set -e
+            cd /www/wwwroot/nodeapps/examples_carlosdj
+
+            echo "Buildando a imagem do examples..."
+            docker compose -f docker-compose.prod.yml build --pull
+
+            echo "Subindo o container..."
+            docker compose -f docker-compose.prod.yml up -d
+
+            echo "Limpando imagens antigas..."
+            docker image prune -f
+
+            docker compose -f docker-compose.prod.yml ps
+            # O deploy só passa se a página responder (tenta por até 30 s)
+            for i in $(seq 1 6); do
+              sleep 5
+              CODIGO=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:4904/testeinicial/ || true)
+              [ "$CODIGO" = "200" ] && break
+            done
+            echo "Teste: $CODIGO"
+            [ "$CODIGO" = "200" ] || { echo "O examples não respondeu depois do deploy."; docker compose -f docker-compose.prod.yml logs --tail 40; exit 1; }

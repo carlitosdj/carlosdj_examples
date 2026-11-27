@@ -1,0 +1,91 @@
+.inicio {
+  padding: calc(var(--topo) + clamp(48px, 9vw, 110px)) 0 100px;
+}
+
+.inicio .sobre {
+  margin-bottom: 14px;
+  color: var(--ceu);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.inicio h1 {
+  font-size: clamp(36px, 6vw, 68px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.inicio .apoio {
+  margin-top: 18px;
+  max-width: 34em;
+  color: var(--apagado);
+  font-size: clamp(17px, 2vw, 20px);
+}
+
+.lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 20px;
+  margin-top: 56px;
+}
+
+.exemplo {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  background: var(--cartao);
+  text-decoration: none;
+  transition: transform 0.25s, border-color 0.25s;
+}
+
+.exemplo:hover,
+.exemplo:focus-visible {
+  transform: translateY(-4px);
+  border-color: var(--ceu);
+  outline: none;
+}
+
+.exemplo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.exemplo div {
+  padding: 22px 24px 24px;
+}
+
+.exemplo h2 {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.exemplo p {
+  margin-top: 6px;
+  color: var(--apagado);
+  font-size: 15px;
+}
+
+.exemplo ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.exemplo li {
+  padding: 4px 12px;
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  color: var(--ceu);
+  font-size: 12px;
+  font-weight: 700;
+}
