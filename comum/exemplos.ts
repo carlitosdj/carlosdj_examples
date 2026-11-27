@@ -16,4 +16,11 @@ export const EXEMPLOS: Exemplo[] = [
     capa: 'testeinicial/quadros/d/0085.webp',
     etiquetas: ['GSAP', 'ScrollTrigger', 'Canvas'],
   },
+  {
+    pasta: 'saidopapel',
+    titulo: 'Sai do papel',
+    texto: 'O controle da obra deixa o caderno e cai no celular. Vídeo em tela cheia, letras que seguem a tinta e contadores na rolagem.',
+    capa: 'saidopapel/quadros/d/0121.webp',
+    etiquetas: ['Letra por letra', 'Contadores', 'Texto troca de lado'],
+  },
 ];

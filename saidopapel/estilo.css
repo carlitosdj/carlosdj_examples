@@ -1,0 +1,515 @@
+:root {
+  --papel: rgb(233, 207, 155); /* o tom do caderno: é a cor de destaque no começo */
+  --ceu-rgb: rgb(169, 205, 236); /* o azul do site: a cor de destaque no fim */
+  --verde: #4ec07a; /* o "conferido" do celular do vídeo */
+  --sobre-verde: #0e0e10;
+  --sombra: rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- Carregamento ---------- */
+html.carregando {
+  overflow: hidden;
+}
+
+.carga {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  background: var(--fundo);
+  transition: opacity 0.6s, visibility 0.6s;
+}
+
+.carga.pronta {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.carga-numero {
+  font-size: clamp(56px, 12vw, 120px);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.carga-texto {
+  color: var(--apagado);
+  font-weight: var(--fino);
+}
+
+.carga-barra {
+  width: 180px;
+  height: 3px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: var(--linha);
+  overflow: hidden;
+}
+
+.carga-barra i {
+  display: block;
+  height: 100%;
+  background: var(--papel);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ---------- Palco (tela deitada: computador) ---------- */
+.palco {
+  /* a cor de destaque muda do papel para o azul ao longo da rolagem (main.ts) */
+  --acento: var(--papel);
+  --borda: 5vw;
+  position: relative;
+  height: 100vh;
+  height: 100lvh;
+  overflow: hidden;
+  background: var(--fundo);
+}
+
+/* O vídeo: tela cheia do começo ao fim */
+.quadro {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.quadro canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Véus: escurecem só o lado em que o texto está, para ele ler em cima da imagem clara */
+.veu {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.veu-esq {
+  background: linear-gradient(to right, rgba(14, 14, 16, 0.92), rgba(14, 14, 16, 0.7) 26%, rgba(14, 14, 16, 0) 56%),
+    linear-gradient(to bottom, rgba(14, 14, 16, 0.6), rgba(14, 14, 16, 0) 24%);
+}
+
+.veu-dir {
+  background: linear-gradient(to left, rgba(14, 14, 16, 0.94), rgba(14, 14, 16, 0.76) 20%, rgba(14, 14, 16, 0) 38%),
+    linear-gradient(to bottom, rgba(14, 14, 16, 0.6), rgba(14, 14, 16, 0) 24%);
+  visibility: hidden; /* entra quando o texto vai para a direita */
+}
+
+/* As frases se empilham na mesma célula, centradas na altura: à esquerda ou à direita */
+.textos {
+  position: absolute;
+  top: 0;
+  bottom: calc(100lvh - 100svh);
+  left: var(--borda);
+  right: var(--borda);
+  display: grid;
+  align-items: center;
+}
+
+.frase {
+  grid-area: 1 / 1;
+  justify-self: start;
+  width: 36vw;
+  visibility: hidden; /* o GSAP mostra na hora certa */
+  text-shadow: 0 2px 24px var(--sombra);
+}
+
+.frase-direita {
+  justify-self: end;
+  width: 24vw;
+}
+
+.frase-direita h2 {
+  font-size: clamp(24px, 2.7vw, 46px);
+}
+
+.frase h1,
+.frase h2 {
+  font-size: clamp(30px, 3.9vw, 66px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.sobre {
+  margin-bottom: 14px;
+  color: var(--acento, var(--ceu));
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.apoio {
+  margin-top: 18px;
+  font-size: clamp(16px, 1.5vw, 21px);
+  color: var(--texto);
+}
+
+/* Letras soltas (main.ts quebra o texto): cada uma vira um bloco que pode voar */
+.palavra {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.letra {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Lista conferida */
+.conferidos {
+  display: grid;
+  gap: 10px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.conferidos li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  background: var(--cartao);
+  font-weight: 600;
+  font-size: clamp(14px, 1.2vw, 17px);
+  text-shadow: none;
+  visibility: hidden;
+}
+
+.conferidos i {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--verde)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e0e10' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 12.5l3.5 3.5 7.5-8'/%3E%3C/svg%3E")
+    center / 16px no-repeat;
+}
+
+/* Contadores: uma pílula no alto, onde a imagem é só fundo desfocado */
+.travessia {
+  --largura: min(620px, 62vw);
+  position: absolute;
+  top: calc(var(--topo) + 18px);
+  left: calc(50% - var(--largura) / 2);
+  width: var(--largura);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(14px, 2vw, 28px);
+  padding: 12px 26px;
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  background: rgba(14, 14, 16, 0.62);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  visibility: hidden;
+}
+
+.lado strong {
+  display: block;
+  font-size: clamp(22px, 2.2vw, 34px);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--papel);
+}
+
+.lado span {
+  color: var(--apagado);
+  font-size: 13px;
+  font-weight: var(--fino);
+}
+
+.lado-app {
+  text-align: right;
+}
+
+.lado-app strong {
+  color: var(--verde);
+}
+
+.fio {
+  position: relative;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--linha);
+}
+
+.fio i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--acento);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.fio b {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 999px;
+  background: var(--acento);
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.08);
+}
+
+.andamento {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  z-index: 2;
+}
+
+.andamento i {
+  display: block;
+  height: 100%;
+  background: var(--acento);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ---------- Tela em pé (celular): vídeo quadrado no alto, texto embaixo ---------- */
+html.em-pe .palco {
+  --altura-video: min(100vw, 50svh);
+}
+
+html.em-pe .quadro {
+  inset: 0 0 auto 0;
+  height: var(--altura-video);
+}
+
+html.em-pe .veu-esq {
+  background: linear-gradient(to bottom, rgba(14, 14, 16, 0.6), rgba(14, 14, 16, 0) 26%),
+    linear-gradient(to top, rgba(14, 14, 16, 1), rgba(14, 14, 16, 0) 30%);
+}
+
+html.em-pe .veu-dir {
+  display: none;
+}
+
+html.em-pe .travessia {
+  top: calc(var(--altura-video) + 6px);
+  left: 20px;
+  right: 20px;
+  width: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html.em-pe .lado strong {
+  font-size: 30px;
+}
+
+html.em-pe .frase,
+html.em-pe .frase-direita {
+  justify-self: stretch;
+  width: auto;
+  text-shadow: none;
+}
+
+html.em-pe .apoio {
+  color: var(--apagado);
+}
+
+html.em-pe .textos {
+  top: calc(var(--altura-video) + 92px);
+  bottom: auto;
+  left: 20px;
+  right: 20px;
+  align-items: start;
+}
+
+html.em-pe .frase h1,
+html.em-pe .frase h2 {
+  font-size: clamp(28px, 8.6vw, 44px);
+}
+
+html.em-pe .sobre {
+  margin-bottom: 10px;
+}
+
+html.em-pe .apoio {
+  margin-top: 12px;
+  font-size: 16px;
+}
+
+html.em-pe .conferidos {
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+html.em-pe .conferidos li {
+  gap: 8px;
+  padding: 9px 10px;
+  font-size: 13px;
+  line-height: 1.2;
+  border-radius: 16px;
+}
+
+html.em-pe .conferidos i {
+  width: 20px;
+  height: 20px;
+  background-size: 13px;
+}
+
+html.em-pe .lado span {
+  font-size: 12px;
+}
+
+/* ---------- Depois do palco ---------- */
+.como {
+  padding: clamp(72px, 12vw, 140px) 0;
+}
+
+.como .sobre {
+  color: var(--ceu);
+}
+
+.como h2 {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.passos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+  margin: 48px 0;
+}
+
+.passos h3 {
+  margin: 14px 0 8px;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.passos p {
+  color: var(--apagado);
+  font-size: 15px;
+}
+
+.passos code {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ceu);
+}
+
+.passo-n {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--ceu);
+  color: var(--sobre-ceu);
+  font-weight: 800;
+}
+
+.numeros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--linha);
+}
+
+.numeros strong {
+  display: block;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.numeros span {
+  color: var(--apagado);
+  font-weight: var(--fino);
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.botao-linha {
+  background: transparent;
+  color: var(--texto);
+  box-shadow: inset 0 0 0 1px var(--linha);
+}
+
+/* ---------- "Reduzir movimento": imagem parada e tudo como texto comum ---------- */
+html.sem-movimento .palco {
+  height: auto;
+  padding-bottom: 72px;
+  --acento: var(--ceu);
+}
+
+html.sem-movimento .quadro {
+  position: relative;
+  inset: auto;
+  height: min(70svh, 56.25vw);
+}
+
+html.sem-movimento .veu-esq {
+  background: linear-gradient(to bottom, rgba(14, 14, 16, 0.6), rgba(14, 14, 16, 0) 26%);
+}
+
+html.sem-movimento .veu-dir {
+  display: none;
+}
+
+html.sem-movimento .textos {
+  position: static;
+  width: min(1120px, 100% - 40px);
+  margin: 56px auto 0;
+  gap: 48px;
+}
+
+html.sem-movimento .frase {
+  grid-area: auto;
+  justify-self: stretch;
+  width: auto;
+  text-shadow: none;
+  visibility: visible;
+}
+
+html.sem-movimento .apoio {
+  color: var(--apagado);
+}
+
+html.sem-movimento .conferidos {
+  max-width: 420px;
+}
+
+html.sem-movimento .conferidos li {
+  visibility: visible;
+}
+
+html.sem-movimento .travessia,
+html.sem-movimento .andamento {
+  display: none;
+}

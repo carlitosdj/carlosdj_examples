@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR" class="carregando">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0E0E10" />
+    <title>Sai do papel · examples · carlosdj</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="carga" id="carga" role="status" aria-live="polite">
+      <p class="carga-numero"><span id="carga-numero">0</span>%</p>
+      <p class="carga-texto">Abrindo o caderno</p>
+      <div class="carga-barra"><i id="carga-barra"></i></div>
+    </div>
+
+    <main>
+      <section class="palco" id="palco" aria-label="O controle da obra sai do caderno e vai para o celular">
+        <!-- O vídeo, em tela cheia o tempo todo (no celular em pé fica no alto) -->
+        <div class="quadro" id="quadro">
+          <canvas id="tela" aria-hidden="true"></canvas>
+          <!-- Dois véus: escurecem o lado em que o texto está. Trocam quando o texto troca de lado -->
+          <div class="veu veu-esq" id="veu-esq" aria-hidden="true"></div>
+          <div class="veu veu-dir" id="veu-dir" aria-hidden="true"></div>
+        </div>
+
+        <!-- Cada frase diz o trecho (0 a 1) em que aparece. Ficam à esquerda enquanto o caderno é o assunto;
+             a última vai para a direita (frase-direita), porque o celular passa a ocupar o meio da imagem -->
+        <div class="textos">
+          <div class="frase" data-de="0" data-ate="0.16">
+            <p class="sobre">Teste 2</p>
+            <h1>A obra inteira <span class="fino">mora num caderno.</span></h1>
+            <p class="apoio fino">Role e veja a tinta mudar de endereço.</p>
+          </div>
+
+          <!-- data-voa: a partir daqui, cada letra sai voando até o celular do vídeo -->
+          <div class="frase" data-de="0.19" data-voa="0.33" data-ate="0.54">
+            <p class="sobre">No papel</p>
+            <h2 data-letras>Medição, compra e diária. Tudo à mão.</h2>
+          </div>
+
+          <div class="frase" data-de="0.5" data-ate="0.68">
+            <p class="sobre">Na travessia</p>
+            <h2>Nada se perde. <span class="fino">Só muda de lugar.</span></h2>
+          </div>
+
+          <div class="frase frase-direita" data-de="0.72" data-ate="1">
+            <p class="sobre">No celular</p>
+            <h2>Conferido, <span class="fino">na palma da mão.</span></h2>
+            <ul class="conferidos">
+              <li data-em="0.76"><i aria-hidden="true"></i>Medição nº 4</li>
+              <li data-em="0.81"><i aria-hidden="true"></i>Compra de tijolos</li>
+              <li data-em="0.86"><i aria-hidden="true"></i>Diárias da semana</li>
+              <li data-em="0.91"><i aria-hidden="true"></i>Concreto da laje</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contadores: o que sai do papel chega no app -->
+        <div class="travessia" id="travessia" aria-hidden="true">
+          <div class="lado"><strong id="n-papel">48</strong><span>linhas no papel</span></div>
+          <div class="fio"><i id="fio-cheio"></i><b id="fio-ponto"></b></div>
+          <div class="lado lado-app"><strong id="n-app">0</strong><span>itens conferidos</span></div>
+        </div>
+
+        <div class="andamento" aria-hidden="true"><i id="andamento"></i></div>
+      </section>
+
+      <section class="como" id="como">
+        <div class="miolo">
+          <p class="sobre">O que este teste tem de novo</p>
+          <h2>O vídeo é só <span class="fino">uma das camadas.</span></h2>
+
+          <div class="passos">
+            <article class="cartao">
+              <span class="passo-n">1</span>
+              <h3>O texto desvia do assunto</h3>
+              <p>O vídeo fica em tela cheia. As frases começam à esquerda e a última vai para a direita, quando o celular ocupa o meio da imagem.</p>
+            </article>
+            <article class="cartao">
+              <span class="passo-n">2</span>
+              <h3>As letras seguem a tinta</h3>
+              <p>A frase é quebrada em letras. Cada uma faz um arco até o celular do vídeo, no mesmo trecho em que a tinta sai do caderno.</p>
+            </article>
+            <article class="cartao">
+              <span class="passo-n">3</span>
+              <h3>Os números contam a história</h3>
+              <p>O GSAP anima dois números comuns, de 48 a 0 e de 0 a 48. A rolagem para no meio e a conta para junto.</p>
+            </article>
+            <article class="cartao">
+              <span class="passo-n">4</span>
+              <h3>No celular, outro recorte</h3>
+              <p>Tela em pé recebe o vídeo quadrado no alto e o texto embaixo. O que importa (caderno e celular) cabe inteiro.</p>
+            </article>
+          </div>
+
+          <div class="numeros">
+            <div><strong id="m-total">121</strong><span>quadros</span></div>
+            <div><strong id="m-versao">—</strong><span>versão carregada</span></div>
+            <div><strong id="m-peso">—</strong><span>baixados nesta tela</span></div>
+            <div><strong id="m-tempo">—</strong><span>para carregar</span></div>
+          </div>
+
+          <div class="acoes">
+            <a class="botao" id="voltar" href="#palco">Ver de novo</a>
+            <a class="botao botao-linha" href="../">Todos os exemplos</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -18,6 +18,7 @@ Abre em http://localhost:3715/ (o teste: `/testeinicial/`).
 |---|---|
 | `comum/` | O que todo exemplo usa: `menu.ts` (menu superior), `sequencia.ts` (quadros no canvas), `base.css` (cores e fonte do site), `exemplos.ts` (lista da página inicial) |
 | `testeinicial/` | O exemplo: `index.html` (frases e trechos), `main.ts` (GSAP), `estilo.css` |
+| `saidopapel/` | Teste 2: vídeo em tela cheia, o texto troca de lado quando o celular ocupa o meio, as letras de uma frase voam até o celular, contadores e lista conferida na mesma linha do tempo. No celular o recorte é quadrado (`PROPORCAO=1 ./quadros.sh videos/saidopapel.mp4 saidopapel 0.46`) |
 | `public/<exemplo>/quadros/` | Os quadros gerados: `d/` deitado, `c/` em pé, `info.json` |
 | `videos/` | Vídeos originais. Não vão para o git, nem para o build, nem para o servidor: guarde uma cópia |
 
